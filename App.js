@@ -1,7 +1,9 @@
 import { Image, StyleSheet, Text } from "react-native";
 import React, { useState } from "react";
+import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import { Asset } from "expo-asset";
+import { Ionicons } from "@expo/vector-icons";
 
 const cacheImages = (images) =>
   images.map((image) => {
@@ -12,6 +14,11 @@ const cacheImages = (images) =>
     }
   });
 
+const cacheFonts = (fonts) =>
+  fonts.map((font) => {
+    Font.loadAsync(font);
+  });
+
 export default function App() {
   const [isReady, setIsReady] = useState(false);
   const handleFinish = () => setIsReady(true);
@@ -20,6 +27,12 @@ export default function App() {
       require("./assets/loginBg.avif"),
       "http://logok.org/wp-content/uploads/2014/07/airbnb-logo-belo-219x286.png",
     ];
+    const fonts = [Ionicons.font];
+
+    const imagePromises = cacheImages(images);
+    const fontPromises = cacheFonts(fonts);
+
+    return Promise.all([...fontPromises, ...imagePromises]);
   };
 
   return isReady ? (
